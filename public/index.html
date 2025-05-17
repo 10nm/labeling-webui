@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CSV Labeler</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="menuButton">☰</div>
+  <div id="sideMenu">
+    <h2>メニュー</h2>
+    <div class="toggle-switch">
+      <label for="darkModeToggle">ダークモード:</label>
+      <input type="checkbox" id="darkModeToggle">
+      <span class="slider round"></span>
+    </div>
+  </div>
+
+  <table id="csvTable"></table>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      let currentIndex = NaN;
+      const body = document.body; // bodyの取得を前に移動
+
+      function loadData(data) {
+        const table = document.getElementById('csvTable');
+        table.innerHTML = '';
+
+        if (data.length > 0) {
+          const realIndex = data[5].index;
+          currentIndex = realIndex;
+          const headerRow = document.createElement('tr');
+          const headerKeys = ['index', 'Utterance', 'Response', 'label'];
+          headerKeys.forEach(function(key) {
+            const headerCell = document.createElement('th');
+            headerCell.textContent = key;
+            headerRow.appendChild(headerCell);
+          });
+          table.appendChild(headerRow);
+
+          data.forEach(function(row, i) {
+            const dataRow = document.createElement('tr');
+            if (i === 5) {
+              dataRow.classList.add('highlight'); // 現在の行にhighlightクラスを追加
+            }
+            headerKeys.forEach(function(key) {
+              const dataCell = document.createElement('td');
+              dataCell.textContent = row[key] === undefined ? '' : row[key];
+              dataRow.appendChild(dataCell);
+            });
+            table.appendChild(dataRow);
+          });
+        } else {
+          const message = document.createElement('p');
+          message.textContent = 'No data to display.';
+          table.appendChild(message);
+        }
+      }
+
+      function fetchData() {
+        fetch('/api/load-csv?index=' + currentIndex)
+          .then(function(response) {
+            return response.json();
+          })
+          .then(function(data) {
+            loadData(data);
+          })
+          .catch(function(error) {
+            console.error('Error:', error);
+          });
+      }
+
+      function updateLabel(label) {
+        fetch('/api/update-label?index=' + currentIndex + '&label=' + label)
+          .then(function(response) {
+            return response.json();
+          })
+          .then(function(data) {
+            fetchData(); // ラベル更新後に次のデータを読み込む
+          })
+          .catch(function(error) {
+            console.error('Error:', error);
+          });
+      }
+
+      function saveData() {
+        fetch('/api/save-csv')
+          .then(function(response) {
+            return response.json();
+            alert('Data saved successfully');
+          })
+          .then(function(error) {
+            console.error('Error:', error);
+          });
+      }
+
+      document.addEventListener('keydown', function(event) {
+        let newLabel = '';
+        if (event.key === '1') {
+          newLabel = '1';
+          updateLabel(newLabel);
+          currentIndex++;
+        } else if (event.key === '2') {
+          newLabel = '2';
+          updateLabel(newLabel);
+          currentIndex++;
+        } else if (event.key === 'ArrowRight') {
+          currentIndex++;
+          fetchData();
+        } else if (event.key === 'ArrowLeft') {
+          currentIndex = Math.max(0, currentIndex - 1);
+          fetchData();
+        } else if (event.key === 's') {
+          saveData();
+        }
+      });
+
+      fetchData();
+
+      function isMobile() {
+        return window.innerWidth <= 768; // 768pxをブレークポイントとする
+      }
+
+      // ボタンの表示/非表示を切り替える
+      function toggleButtons() {
+        const buttons = document.getElementById('labelButtons');
+        if (isMobile()) {
+          buttons.style.display = 'block';
+        } else {
+          buttons.style.display = 'none';
+        }
+      }
+
+      // ボタンにイベントリスナーを追加
+      document.getElementById('label1Button').addEventListener('click', function() {
+        updateLabel('1');
+        currentIndex++;
+        fetchData();
+      });
+
+      document.getElementById('label2Button').addEventListener('click', function() {
+        updateLabel('2');
+        currentIndex++;
+        fetchData();
+      });
+
+      // ページロード時とウィンドウリサイズ時にボタン表示を調整
+      window.addEventListener('load', toggleButtons);
+      window.addEventListener('resize', toggleButtons);
+
+      // メニュー表示/非表示の切り替え
+      const menuButton = document.getElementById('menuButton');
+      const sideMenu = document.getElementById('sideMenu');
+
+      menuButton.addEventListener('click', function() {
+        sideMenu.classList.toggle('open');
+        menuButton.classList.toggle('open');
+        body.classList.toggle('menu-open'); // bodyにmenu-openクラスを付け外し
+      });
+
+      // ダークモード切り替え機能
+      const darkModeToggle = document.getElementById('darkModeToggle');
+
+      // ローカルストレージから設定を読み込む
+      const savedDarkMode = localStorage.getItem('darkMode');
+      if (savedDarkMode === 'enabled') {
+        body.classList.add('dark-mode');
+        darkModeToggle.checked = true;
+      }
+
+      darkModeToggle.addEventListener('change', function() {
+        if (darkModeToggle.checked) {
+          body.classList.add('dark-mode');
+          localStorage.setItem('darkMode', 'enabled');
+        } else {
+          body.classList.remove('dark-mode');
+          localStorage.setItem('darkMode', 'disabled');
+        }
+      });
+    }); // DOMContentLoaded イベントリスナーの終了
+  </script>
+
+  <div id="labelButtons" style="display: none; text-align: center; margin-top: 20px;">
+    <button id="label1Button">ラベル 1</button>
+    <button id="label2Button">ラベル 2</button>
+  </div>
+
+  <p>Press 1 or 2 to add label, ArrowRight to next data, ArrowLeft to previous data.</p>
+</body>
+</html>
