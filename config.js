@@ -1,3 +1,5 @@
 module.exports = {
-  csvFilePath: 'nwp.csv',
+  csvFilePaths: [
+
+  ],
 };
