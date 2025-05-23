@@ -88,9 +88,42 @@ body.dark-mode #sideMenu h2 {
 }
 
 #sideMenu label {
-  display: block; /* トグルスイッチのためにインラインに変更 */
+  display: inline-block; /* トグルスイッチのためにインラインに変更 */
   margin-bottom: 10px;
   margin-right: 10px; /* チェックボックスとの間にスペース */
+}
+
+#currentLabelingContainer {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 10%;
+  font-weight: bold;
+  font-size: 1.1em;
+  text-align: left;
+}
+
+/* CSVファイル選択ドロップダウンのスタイル */
+.csv-select {
+  margin-bottom: 20px; /* 下にスペースを追加 */
+}
+
+.csv-select label {
+  display: block; /* ラベルをブロック要素に */
+  margin-bottom: 5px; /* ラベルとドロップダウンの間にスペース */
+}
+
+#csvFileSelect {
+  width: 100%; /* 親要素の幅に合わせる */
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* paddingとborderを幅に含める */
+}
+
+body.dark-mode #csvFileSelect {
+  background-color: #333;
+  color: #eee;
+  border-color: #555;
 }
 
 /* トグルスイッチのコンテナ */
@@ -212,7 +245,82 @@ body.menu-open #csvTable {
   text-overflow: clip;
   white-space: normal;
 }
-
+ 
+/* 統計情報表示領域のスタイル */
+#statsContainer {
+  width: 80%;
+  margin: 20px auto; /* テーブルの下にマージンを追加 */
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: margin-left 0.3s ease; /* メニュー開閉時のマージン調整 */
+}
+ 
+body.dark-mode #statsContainer {
+  background-color: #252526;
+  border-color: #555;
+}
+ 
+body.menu-open #statsContainer {
+  margin-left: 270px; /* メニューが開いているときに左マージンを追加 */
+}
+ 
+#statsContainer h3 {
+  margin-top: 0;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+ 
+body.dark-mode #statsContainer h3 {
+  color: #eee;
+  border-bottom-color: #555;
+}
+ 
+#statsContent div {
+  margin-bottom: 15px; /* 各ファイル統計情報の間にスペース */
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #eee; /* ファイル間の区切り線 */
+}
+ 
+body.dark-mode #statsContent div {
+  border-bottom-color: #555;
+}
+ 
+#statsContent div:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none; /* 最後の区切り線はなし */
+}
+ 
+#statsContent h4 {
+  margin: 0 0 5px 0;
+  color: #555;
+}
+ 
+body.dark-mode #statsContent h4 {
+  color: #ccc;
+}
+ 
+#statsContent ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+ 
+#statsContent li {
+  margin-bottom: 3px;
+  font-size: 0.9em;
+  color: #666;
+}
+ 
+body.dark-mode #statsContent li {
+  color: #bbb;
+}
+ 
 p {
   text-align: center;
   margin-top: 20px;
