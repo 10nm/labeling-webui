@@ -26,6 +26,14 @@
   
   <table id="csvTable"></table>
 
+  <div id="labelButtons" style="display: none; text-align: center; margin-top: 20px;">
+    <button id="label1Button">ラベル 1</button>
+    <button id="label2Button">ラベル 2</button>
+    <button id="prevButton">Prev</button>
+    <button id="saveButton">Save</button>
+    <button id="nextButton">Next</button>
+  </div>
+
   <div id="statsContainer">
     <h3>ラベル別統計情報</h3>
     <div id="statsContent"></div>
@@ -156,6 +164,20 @@
       document.getElementById('label2Button').addEventListener('click', function() {
         updateLabel('2');
         currentIndex++;
+        fetchData();
+      });
+
+      document.getElementById('saveButton').addEventListener('click', function() {
+        saveData();
+      });
+
+      document.getElementById('nextButton').addEventListener('click', function() {
+        currentIndex++;
+        fetchData();
+      });
+
+      document.getElementById('prevButton').addEventListener('click', function() {
+        currentIndex--;
         fetchData();
       });
 
@@ -314,10 +336,7 @@
     }); // DOMContentLoaded イベントリスナーの終了
   </script>
 
-  <div id="labelButtons" style="display: none; text-align: center; margin-top: 20px;">
-    <button id="label1Button">ラベル 1</button>
-    <button id="label2Button">ラベル 2</button>
-  </div>
+
 
   <p>Press 1 or 2 to add label, ArrowRight to next data, ArrowLeft to previous data.</p>
   <p></p>

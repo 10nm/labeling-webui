@@ -339,10 +339,33 @@ p {
   }
 
   /* ボタンのスタイル */
+  #labelButtons {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  }
+
   #labelButtons button {
-    padding: 10px 20px;
+    padding: 12px 25px;
     margin: 5px;
-    font-size: 1em;
+    font-size: 1.1em;
     cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background: #fff;
+  }
+
+  body.dark-mode #labelButtons {
+    background: rgba(30, 30, 30, 0.9);
+  }
+
+  body.dark-mode #labelButtons button {
+    background: #333;
+    color: #eee;
+    border-color: #555;
   }
 }
